@@ -1,0 +1,118 @@
+﻿@{ 
+    ViewBag.Title = "GetData";
+}
+<style>
+    #timeQuantum{
+
+    }
+</style>
+
+<h2 class="text-center">Enter data</h2>
+<h6 class="text-danger text-center">Make sure the data entered is valid or else the program will fail to execute.</h6>
+<br />
+<div class="container" id="mydiv">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <p><b>Process Id</b></p>
+        </div>
+        <div class="col-md-4 text-center">
+            <p><b>Process Arrival Time</b></p>
+        </div>
+        <div class="col-md-4 text-center">
+            <p><b>Process Burst Time</b></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <input type="text" class="form-control" id="process_id_1" />
+        </div>
+        <div class="col-md-4 text-center">
+            <input type="number" class="form-control" id="process_arr_time_1" />
+        </div>
+        <div class="col-md-4 text-center">
+            <input type="number" class="form-control" id="process_burst_time_1" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <input type="button" id="button_1" class="btn btn-success" value="Add Process" onclick="AddProcess('process_id_1','process_arr_time_1','process_burst_time_1', 'button_1')" />
+        </div>
+    </div>
+    <br />
+</div>
+<br />
+<div class="row text-center">
+    <div class="col-md-12 text-center">
+        <strong>Please enter the time quantum before you proceed:</strong>
+    </div>
+</div>
+<br />
+<div class="row text-center justify-content-center container">
+    <div class="col-md-12 text-center" id="quantum">
+        <input type="number" id="timeQuantum" class="form-control"/>
+    </div>
+</div>
+<p class="text-danger text-center" id="errorMessage"></p>
+<div class="text-center">
+    <input type="button" class="btn btn-success" id="proceed" value="Proceed" onclick="proceed()" disabled/>
+</div>
+
+<script type="text/javascript">
+    var i = 2;
+    var AddProcess = function (prId,prArrTimeId, prBurstTimeId, buttonId) {
+        debugger;
+        $("#proceed").attr('disabled', false);
+        var processId = "#" + prId;
+        var processArrivalTimeId = "#" + prArrTimeId;
+        var processBurstTimeId = "#" + prBurstTimeId;
+        var butid = "#" + buttonId;
+        var text = $(processId).val();
+        var arrivalTime = $(processArrivalTimeId).val();
+        var burstTime = $(processBurstTimeId).val();
+        $.ajax({
+            type: "POST",
+            url: "/Home/AddData",
+            data: { processId: text, burstTime: burstTime, arrivalTime: arrivalTime },
+            success: function (result) {
+                $(processId).attr("disabled", "disabled");
+                $(processArrivalTimeId).attr("disabled", "disabled");
+                $(processBurstTimeId).attr("disabled", "disabled");
+                $(butid).hide();
+                //$("#mydiv").append("<div class=\"row text-center\"><div class=\"col-md-4\"></div><div class=\"col-md-2\"><input type=\"text\" id=\"text_" + i + "\" class=\"form-control\"/></div><div class=\"col-md-2\"><input type=\"button\" id=\"button_" + i + "\" class=\"btn btn-success\" value=\"Shto gjendje\" onclick=\"ShtoGjendje('text_" + i + "','button_" + i + "')\"/></div><div class=\"col-md-4\"></div></div><br/>");
+                $("#mydiv").append("<div class=\"row\"><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_id_" + i + "\"></div><div class=\"col-md-4 text-center\"><input type=\"number\" class=\"form-control\" id=\"process_arr_time_" + i + "\"></div><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_burst_time_" + i + "\"></div></div> <br /><div class=\"row\"><div class=\"col-md-12 text-center\"><input type=\"button\" id=\"button_" + i + "\" class=\"btn btn-success\" value=\"Add process\" onclick=\"AddProcess('process_id_" + i + "','process_arr_time_" + i + "','process_burst_time_" + i + "','button_" + i + "')\"/></div></div><br/>");
+                i++;
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+    function proceed() {
+        debugger
+        var timeQuantum = $("#timeQuantum").val();
+        if (timeQuantum <= 0) {
+            $("errorMessage").val("Please enter a positive integer number");
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "/Home/AddTimeQuantum",
+                data: { timeQuantumParam: timeQuantum},
+                success: function (result) {
+                    window.location.href = result.Url;
+                },
+                error: function (error) {
+                    $("errorMessage").val("Please enter a positive integer number");
+                }
+            });
+        }
+    }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<style>
+    #quantum input {
+        margin: 0 auto;
+    }
+</style>
