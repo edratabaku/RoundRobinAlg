@@ -22,5 +22,9 @@ namespace RoundRobinAlg.Models
         /// Burst time for process
         /// </summary>
         public int BurstTime { get; set; }
+        /// <summary>
+        /// If process has been fully executed
+        /// </summary>
+        public bool IsFinished { get; set; }
     }
 }

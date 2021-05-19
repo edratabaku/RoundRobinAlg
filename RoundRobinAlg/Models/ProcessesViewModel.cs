@@ -5,8 +5,10 @@ using System.Web;
 
 namespace RoundRobinAlg.Models
 {
-    //public class ProcessesViewModel
-    //{
-    //    public int TimeQuantum { get; set; }
-    //}
+    public class ProcessesViewModel
+    {
+        public int StartTime { get; set; }
+        public int EndTime { get; set; }
+        public string ProcessId { get; set; }
+    }
 }

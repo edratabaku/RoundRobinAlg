@@ -61,7 +61,6 @@
 <script type="text/javascript">
     var i = 2;
     var AddProcess = function (prId,prArrTimeId, prBurstTimeId, buttonId) {
-        debugger;
         $("#proceed").attr('disabled', false);
         var processId = "#" + prId;
         var processArrivalTimeId = "#" + prArrTimeId;
@@ -89,7 +88,6 @@
         });
     }
     function proceed() {
-        debugger
         var timeQuantum = $("#timeQuantum").val();
         if (timeQuantum <= 0) {
             $("errorMessage").val("Please enter a positive integer number");
