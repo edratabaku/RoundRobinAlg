@@ -1,45 +1,101 @@
-﻿@model IEnumerable<RoundRobinAlg.Models.ProcessesViewModel>
+﻿@model RoundRobinAlg.Models.ResultViewModel
 
 @{
-    ViewBag.Title = "ShowResult";
+    ViewBag.Title = "ShowSolution";
 }
+<div class="text-white"><h2>Diagrama Gantt</h2></div>
+<br />
+<div class="container">
+    <table>
+        <tr class="borderedTab">
+            @foreach (var process in Model.GanttChartData)
+            {
+                <td class="gantttd">@process.ProcessId</td>
+            }
+        </tr>
+        <tr>
+            @foreach (var process in Model.GanttChartData)
+            {
+                if (process.Equals(Model.GanttChartData.FirstOrDefault()))
+                {
+                    <td class="gantttd"><span class="firstTime">@process.StartTime</span><span class="endTime">@process.EndTime</span></td>
+                }
+                else
+                {
+                    <td class="gantttd"><span class="endTime">@process.EndTime</span></td>
+                }
+            }
+        </tr>
+    </table>
+</div>
+<br />
+<div class="container justify-content-center">
+    <table border="1" class="p-3"style="border: solid #fff;font-size:20px;">
+        <tr>
+        <td class="tabledata">Process Id</td>
+        <td class="tabledata">Arrival Time</td>
+        <td class="tabledata">Burst Time</td>
+        <td class="tabledata">Completion Time</td>
+        <td class="tabledata">Turn Around Time</td>
+        <td class="tabledata">Waiting Time</td>
+        </tr>
+            @foreach(var process in Model.Processes)
+            {
+                <tr>
+                    <td class="tabledata">@process.ProcessId</td>
+                    <td class="tabledata">@process.ArrivalTime</td>
+                    <td class="tabledata">@process.BurstTime</td>
+                    <td class="tabledata">@process.CompletionTime</td>
+                    <td class="tabledata">@process.TurnAroundTime</td>
+                    <td class="tabledata">@process.WaitingTime</td>
+                </tr>
+            }
+    </table>
+</div>
+<br />
+<div class="container">
+    <h4>Average Turn Around Time = @Model.AverageTurnAroundTime.ToString()</h4>
+    <h4>Average Waiting Time = @Model.AverageWaitingTime.ToString()</h4>
+</div>
+<style>
+    .container {
+        background-color: #0e0620;
+        font-family:monospace;
+        text-align:center;
+    }
+    table {
+        background-color: #0e0620;
+    }
+    body {
+        background-color: #0e0620;
+        color: #fff;
+    }
 
-<h2>ShowResult</h2>
+    .firstTime {
+        float:left;
+        text-align: left;
+        font-size:14px;
+    }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.StartTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProcessId)
-        </th>
-        <th></th>
-    </tr>
+    .endTime {
+        float:right;
+        text-align: right;
+        font-size: 14px;
+    }
+    .gantttd{
+        width: 100px;
+        font-size:24px;
+    }
+    .borderedTab{
+        border:solid #fff;
+    }
+        .borderedTab td {
+            border: solid #fff;
+            text-align: center;
+        }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProcessId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
-
-</table>
+    .tabledata{
+        padding:10px;
+        font-size:20px;
+    }
+</style>

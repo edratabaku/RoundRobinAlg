@@ -9,32 +9,41 @@
     <script src="~/Scripts/modernizr-2.8.3.js"></script>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                </ul>
-            </div>
-        </div>
-    </div>
 
-    <div class="container body-content">
+    <div class="container body-content bglay">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+        
     </div>
 
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 </body>
 </html>
+
+@*<style>
+
+    .bglay {
+    }
+
+    body {
+        color: #E24139;
+        background-color: #333333;
+        background: linear-gradient( 180deg, #8d99ae 0%, #2b2d42 100% );
+        font-family: 'Bookman Old Style';
+    }
+    .btn-success {
+        background-color: #E24139;
+        border: solid #E24139;
+        border-radius: 20px;
+    }
+        .btn-success:hover {
+            background-color: #E24139;
+            border: solid #E24139;
+            border-radius: 20px;
+        }
+        .warning {
+            color:white;
+        }
+
+    
+</style>*@

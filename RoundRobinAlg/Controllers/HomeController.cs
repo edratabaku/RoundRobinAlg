@@ -45,7 +45,8 @@ namespace RoundRobinAlg.Controllers
                 ProcessId = processId,
                 BurstTime = burstTime,
                 ArrivalTime = arrivalTime,
-                IsFinished = false
+                IsFinished = false,
+                UpdatedBurstTime = burstTime
             });
             return Json(new { status = "Success" });
         }
@@ -61,14 +62,14 @@ namespace RoundRobinAlg.Controllers
             return Json(new { Url = redirectUrl });
         }
         /// <summary>
-        /// 
+        /// Calculates the completion time, turn around time and waiting time for each process and displays the gantt chart for all processes.
         /// </summary>
         /// <returns></returns>
         public ActionResult ShowResult()
         {
             List<ProcessesViewModel> result = new List<ProcessesViewModel>();
             int currentStartTime = 0;
-            int currentTimeSlice = 0; 
+            int currentTimeSlice = 0;
             bool isCpuTaken = false;
             Process executingProcess = new Process();
             CheckForArrivingProcesses(currentTimeSlice);
@@ -82,38 +83,54 @@ namespace RoundRobinAlg.Controllers
             currentTimeSlice++;
             while (processes.Any(p => p.IsFinished == false))
             {
-                if(currentTimeSlice == currentStartTime + timeQuantum)
+                if (currentTimeSlice == currentStartTime + timeQuantum)
                 {
                     result.Add(new ProcessesViewModel()
                     {
                         StartTime = currentStartTime,
                         EndTime = currentTimeSlice,
-                        ProcessId =executingProcess.ProcessId
+                        ProcessId = executingProcess.ProcessId
                     });
                     isCpuTaken = false;
-                    processes.Where(p=>p.ProcessId == executingProcess.ProcessId).FirstOrDefault().BurstTime -= timeQuantum;
-                    if (processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().BurstTime == 0)
+                    processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().UpdatedBurstTime -= timeQuantum;
+                    if (processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().UpdatedBurstTime == 0)
                     {
                         processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().IsFinished = true;
+                        processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().CompletionTime = currentTimeSlice;
                     }
                     currentStartTime = currentTimeSlice;
                     firstProcessInQueue = queue.FirstOrDefault();
                     CheckForArrivingProcesses(currentTimeSlice);
-                    if(processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().IsFinished == false)
+                    if (processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().IsFinished == false)
                     {
                         queue.Add(processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault());
                     }
                     if (isCpuTaken == false)
                     {
-                        executingProcess = firstProcessInQueue;
+                        if (firstProcessInQueue == null)
+                        {
+                            executingProcess = queue.FirstOrDefault();
+                        }
+                        else
+                        {
+                            executingProcess = firstProcessInQueue;
+                        }
                         queue.Remove(queue.FirstOrDefault());
                         isCpuTaken = true;
                     }
+                    currentTimeSlice++;
                 }
-                else if(executingProcess.BurstTime < timeQuantum && executingProcess.BurstTime == currentTimeSlice - currentStartTime)
+                else if (executingProcess.UpdatedBurstTime < timeQuantum && executingProcess.UpdatedBurstTime == currentTimeSlice - currentStartTime)
                 {
+                    result.Add(new ProcessesViewModel()
+                    {
+                        StartTime = currentStartTime,
+                        EndTime = currentTimeSlice,
+                        ProcessId = executingProcess.ProcessId
+                    });
                     isCpuTaken = false;
                     processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().IsFinished = true;
+                    processes.Where(p => p.ProcessId == executingProcess.ProcessId).FirstOrDefault().CompletionTime = currentTimeSlice;
                     currentStartTime = currentTimeSlice;
                     firstProcessInQueue = queue.FirstOrDefault();
                     CheckForArrivingProcesses(currentTimeSlice);
@@ -127,6 +144,7 @@ namespace RoundRobinAlg.Controllers
                         queue.Remove(queue.FirstOrDefault());
                         isCpuTaken = true;
                     }
+                    currentTimeSlice++;
                 }
                 else
                 {
@@ -134,8 +152,22 @@ namespace RoundRobinAlg.Controllers
                     currentTimeSlice++;
                 }
             }
-            return View(result);
+            CalculateTurnAroundTime(processes);
+            CalculateWaitingTime(processes);
+            ResultViewModel model = new ResultViewModel()
+            {
+                Processes = processes,
+                GanttChartData = result,
+                AverageTurnAroundTime = String.Format("{0:0.##}", CalculateAverageTurnAroundTime(processes)),
+                AverageWaitingTime = String.Format("{0:0.##}", CalculateAverageWaitingTime(processes))
+            };
+            return View(model);
+            //return RedirectToAction("ShowSolution", "Home", new { solution = model});
         }
+        /// <summary>
+        /// Checks if there are any arriving processes
+        /// </summary>
+        /// <param name="currentTime"></param>
         public void CheckForArrivingProcesses(int currentTime)
         {
             List<Process> arrivingProcesses = processes.Where(p => p.ArrivalTime == currentTime).ToList();
@@ -144,6 +176,66 @@ namespace RoundRobinAlg.Controllers
                 queue.Add(arrivingProcess);
             }
         }
-
+        /// <summary>
+        /// Calculates turnaround time for each process
+        /// </summary>
+        /// <param name="model"></param>
+        public void CalculateTurnAroundTime(List<Process> model)
+        {
+            foreach (var process in model)
+            {
+                process.TurnAroundTime = process.CompletionTime - process.ArrivalTime.GetValueOrDefault();
+            }
+        }
+        /// <summary>
+        /// Calculates waiting time for each process
+        /// </summary>
+        /// <param name="model"></param>
+        public void CalculateWaitingTime(List<Process> model)
+        {
+            foreach(var process in model)
+            {
+                process.WaitingTime = process.TurnAroundTime - process.BurstTime;
+            }
+        }
+        /// <summary>
+        /// Calculates average turn around time
+        /// </summary>
+        /// <param name="processes"></param>
+        /// <returns></returns>
+        public double CalculateAverageTurnAroundTime(List<Process> processes)
+        {
+            int total = 0;
+            int numberOfProcesses = processes.Count();
+            foreach(var process in processes)
+            {
+                total += process.TurnAroundTime;
+            }
+            return total / (numberOfProcesses * 1.0);
+        }
+        /// <summary>
+        /// Calculates average waiting time
+        /// </summary>
+        /// <param name="processes"></param>
+        /// <returns></returns>
+        public double CalculateAverageWaitingTime(List<Process> processes)
+        {
+            int total = 0;
+            int numberOfProcesses = processes.Count();
+            foreach (var process in processes)
+            {
+                total += process.WaitingTime;
+            }
+            return total / (numberOfProcesses * 1.0);
+        }
+        /// <summary>
+        /// Shows Gantt Chart and table of all processes
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ActionResult ShowSolution(ResultViewModel solution)
+        {
+            return View(solution);
+        }
     }
 }

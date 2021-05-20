@@ -18,13 +18,29 @@ namespace RoundRobinAlg.Models
         /// Nullable arrival time for process
         /// </summary>
         public int? ArrivalTime { get; set; }
-        /// <summary>
+         /// <summary>
         /// Burst time for process
         /// </summary>
         public int BurstTime { get; set; }
         /// <summary>
+        /// Updated burst time for process
+        /// </summary>
+        public int UpdatedBurstTime { get; set; }
+        /// <summary>
         /// If process has been fully executed
         /// </summary>
         public bool IsFinished { get; set; }
+        /// <summary>
+        /// Completion Time for Process
+        /// </summary>
+        public int CompletionTime { get; set; }
+        /// <summary>
+        /// Turn Around time for process
+        /// </summary>
+        public int TurnAroundTime { get; set; }
+        /// <summary>
+        /// Waiting Time For Process
+        /// </summary>
+        public int WaitingTime { get; set; }
     }
 }

@@ -1,24 +1,135 @@
-﻿@{ 
+﻿@{
     ViewBag.Title = "GetData";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
-    #timeQuantum{
+    .text-danger {
+        font-size: smaller;
+        font-weight: bold;
+        color: #fff;
+    }
 
+    @@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
+    :root {
+        --blue: #0e0620;
+        --white: #fff;
+        --green: #2ccf6d;
+    }
+
+    html,
+    body {
+        height: 100%;
+        background-color: #0e0620;
+    }
+
+    .container {
+        background-color: #0e0620;
+    }
+
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: monospace;
+        color: var(--blue);
+        font-size: 1em;
+    }
+
+    button {
+        font-family: monospace;
+    }
+
+    ul {
+        list-style-type: none;
+        padding-inline-start: 35px;
+    }
+
+    svg {
+        width: 100%;
+        visibility: hidden;
+    }
+
+    h1 {
+        font-size: 7.5em;
+        margin: 15px 0px;
+        font-weight: bold;
+    }
+
+    h2 {
+        font-weight: bold;
+    }
+
+
+    .btn {
+        z-index: 1;
+        overflow: hidden;
+        background: transparent;
+        position: relative;
+        padding: 8px 50px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 1em;
+        letter-spacing: 2px;
+        transition: 0.2s ease;
+        font-weight: bold;
+        margin: 5px 0px;
+    }
+
+        .btn.green {
+            border: 4px solid var(--white);
+            color: var(--white);
+        }
+
+            .btn.green:before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 0%;
+                height: 100%;
+                background: var(--green);
+                z-index: -1;
+                transition: 0.2s ease;
+            }
+
+            .btn.green:hover {
+                color: var(--blue);
+                background-color: var(--white);
+                transition: 0.2s ease;
+            }
+
+            .btn.green:before:hover:before {
+                width: 100%;
+            }
+
+    }
+    }
+    }
+
+    @@media screen and (max-width:768px) {
+        body {
+            display: block;
+        }
+
+        .container {
+            margin-top: 70px;
+            margin-bottom: 70px;
+        }
     }
 </style>
 
-<h2 class="text-center">Enter data</h2>
-<h6 class="text-danger text-center">Make sure the data entered is valid or else the program will fail to execute.</h6>
+<h2 class="text-center text-white">Enter data</h2>
+<p class="warning text-center text-white">Make sure the data entered is valid or else the program will fail to execute.</p>
 <br />
 <div class="container" id="mydiv">
     <div class="row">
-        <div class="col-md-4 text-center">
+        <div class="col-md-4 text-center text-white">
             <p><b>Process Id</b></p>
         </div>
-        <div class="col-md-4 text-center">
+        <div class="col-md-4 text-center text-white">
             <p><b>Process Arrival Time</b></p>
         </div>
-        <div class="col-md-4 text-center">
+        <div class="col-md-4 text-center text-white">
             <p><b>Process Burst Time</b></p>
         </div>
     </div>
@@ -28,6 +139,7 @@
         </div>
         <div class="col-md-4 text-center">
             <input type="number" class="form-control" id="process_arr_time_1" />
+            <p class="warning text-white">(Optional)</p>
         </div>
         <div class="col-md-4 text-center">
             <input type="number" class="form-control" id="process_burst_time_1" />
@@ -36,31 +148,31 @@
     <br />
     <div class="row">
         <div class="col-md-12 text-center">
-            <input type="button" id="button_1" class="btn btn-success" value="Add Process" onclick="AddProcess('process_id_1','process_arr_time_1','process_burst_time_1', 'button_1')" />
+            <input type="button" id="button_1" class="btn green" value="Add Process" onclick="AddProcess('process_id_1','process_arr_time_1','process_burst_time_1', 'button_1')" />
         </div>
     </div>
     <br />
 </div>
 <br />
 <div class="row text-center">
-    <div class="col-md-12 text-center">
+    <div class="col-md-12 text-center warning text-white">
         <strong>Please enter the time quantum before you proceed:</strong>
     </div>
 </div>
 <br />
 <div class="row text-center justify-content-center container">
     <div class="col-md-12 text-center" id="quantum">
-        <input type="number" id="timeQuantum" class="form-control"/>
+        <input type="number" id="timeQuantum" class="form-control" />
     </div>
 </div>
 <p class="text-danger text-center" id="errorMessage"></p>
 <div class="text-center">
-    <input type="button" class="btn btn-success" id="proceed" value="Proceed" onclick="proceed()" disabled/>
+    <input type="button" class="btn green" id="proceed" value="Proceed" onclick="proceed()" disabled />
 </div>
 
 <script type="text/javascript">
     var i = 2;
-    var AddProcess = function (prId,prArrTimeId, prBurstTimeId, buttonId) {
+    var AddProcess = function (prId, prArrTimeId, prBurstTimeId, buttonId) {
         $("#proceed").attr('disabled', false);
         var processId = "#" + prId;
         var processArrivalTimeId = "#" + prArrTimeId;
@@ -79,7 +191,7 @@
                 $(processBurstTimeId).attr("disabled", "disabled");
                 $(butid).hide();
                 //$("#mydiv").append("<div class=\"row text-center\"><div class=\"col-md-4\"></div><div class=\"col-md-2\"><input type=\"text\" id=\"text_" + i + "\" class=\"form-control\"/></div><div class=\"col-md-2\"><input type=\"button\" id=\"button_" + i + "\" class=\"btn btn-success\" value=\"Shto gjendje\" onclick=\"ShtoGjendje('text_" + i + "','button_" + i + "')\"/></div><div class=\"col-md-4\"></div></div><br/>");
-                $("#mydiv").append("<div class=\"row\"><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_id_" + i + "\"></div><div class=\"col-md-4 text-center\"><input type=\"number\" class=\"form-control\" id=\"process_arr_time_" + i + "\"></div><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_burst_time_" + i + "\"></div></div> <br /><div class=\"row\"><div class=\"col-md-12 text-center\"><input type=\"button\" id=\"button_" + i + "\" class=\"btn btn-success\" value=\"Add process\" onclick=\"AddProcess('process_id_" + i + "','process_arr_time_" + i + "','process_burst_time_" + i + "','button_" + i + "')\"/></div></div><br/>");
+                $("#mydiv").append("<div class=\"row\"><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_id_" + i + "\"></div><div class=\"col-md-4 text-center\"><input type=\"number\" class=\"form-control\" id=\"process_arr_time_" + i + "\"><p class=\"text-danger\">(Optional)</p></div><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_burst_time_" + i + "\"></div></div> <br /><div class=\"row\"><div class=\"col-md-12 text-center\"><input type=\"button\" id=\"button_" + i + "\" class=\"btn green\" value=\"Add process\" onclick=\"AddProcess('process_id_" + i + "','process_arr_time_" + i + "','process_burst_time_" + i + "','button_" + i + "')\"/></div></div><br/>");
                 i++;
             },
             error: function (error) {
@@ -96,7 +208,7 @@
             $.ajax({
                 type: "POST",
                 url: "/Home/AddTimeQuantum",
-                data: { timeQuantumParam: timeQuantum},
+                data: { timeQuantumParam: timeQuantum },
                 success: function (result) {
                     window.location.href = result.Url;
                 },
@@ -113,4 +225,8 @@
     #quantum input {
         margin: 0 auto;
     }
+    input.form-control{
+        border-radius: 30px;
+    }
 </style>
+

@@ -1,0 +1,33 @@
+﻿@model RoundRobinAlg.Models.ResultViewModel
+
+@{
+    ViewBag.Title = "ShowSolution";
+}
+
+
+<table border="1">
+        @foreach(var process in Model.GanttChartData)
+            {
+                <tr class="borderedTab"><td>@process.ProcessId</td></tr>
+                if (process.Equals(Model.GanttChartData.FirstOrDefault()))
+                {
+                    <tr><td><span class="firstTime">@process.StartTime</span><span class="endTime">@process.EndTime</span></td></tr>
+                }
+                else
+                {
+                    <tr><td><span class="endTime">@process.EndTime</span></td></tr>
+                }
+            }
+</table>
+<style>
+    body {
+        background-color: #0e0620;
+        color:#fff;
+    }
+    .firstTime {
+        text-align:left;
+    }
+    .endTime{
+        text-align:right;
+    }
+</style>
