@@ -32,12 +32,12 @@
 <div class="container justify-content-center">
     <table border="1" class="p-3"style="border: solid #fff;font-size:20px;">
         <tr>
-        <td class="tabledata">Process Id</td>
-        <td class="tabledata">Arrival Time</td>
-        <td class="tabledata">Burst Time</td>
-        <td class="tabledata">Completion Time</td>
-        <td class="tabledata">Turn Around Time</td>
-        <td class="tabledata">Waiting Time</td>
+        <td class="tabledata">Id Procesi</td>
+        <td class="tabledata">Koha e arritjes</td>
+        <td class="tabledata">Koha e nevojshme per perfundim</td>
+        <td class="tabledata">Koha e perfundimit</td>
+        <td class="tabledata">Koha Turn Around</td>
+        <td class="tabledata">Koha e pritjes</td>
         </tr>
             @foreach(var process in Model.Processes)
             {
@@ -54,8 +54,8 @@
 </div>
 <br />
 <div class="container">
-    <h4>Average Turn Around Time = @Model.AverageTurnAroundTime.ToString()</h4>
-    <h4>Average Waiting Time = @Model.AverageWaitingTime.ToString()</h4>
+    <h4>Koha mesatare Turn Around = @Model.AverageTurnAroundTime.ToString()</h4>
+    <h4>Koha mesatare e pritjes = @Model.AverageWaitingTime.ToString()</h4>
 </div>
 <style>
     .container {

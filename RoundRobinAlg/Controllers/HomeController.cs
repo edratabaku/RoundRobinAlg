@@ -71,16 +71,26 @@ namespace RoundRobinAlg.Controllers
             int currentStartTime = 0;
             int currentTimeSlice = 0;
             bool isCpuTaken = false;
+            bool test = true;
+            Process firstProcessInQueue = new Process();
             Process executingProcess = new Process();
-            CheckForArrivingProcesses(currentTimeSlice);
-            var firstProcessInQueue = queue.FirstOrDefault();
-            if (isCpuTaken == false)
-            {
-                executingProcess = firstProcessInQueue;
-                queue.Remove(queue.FirstOrDefault());
-                isCpuTaken = true;
+            while(test) {
+                CheckForArrivingProcesses(currentTimeSlice);
+                firstProcessInQueue = queue.FirstOrDefault();
+                if (isCpuTaken == false)
+                {
+                    executingProcess = firstProcessInQueue;
+                    if(executingProcess != null)
+                    {
+                        test = false;
+                        isCpuTaken = true;
+                        currentStartTime = executingProcess.ArrivalTime.GetValueOrDefault();
+                    }
+                    queue.Remove(queue.FirstOrDefault());
+                    
+                }
+                currentTimeSlice++;
             }
-            currentTimeSlice++;
             while (processes.Any(p => p.IsFinished == false))
             {
                 if (currentTimeSlice == currentStartTime + timeQuantum)
