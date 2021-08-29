@@ -118,19 +118,19 @@
     }
 </style>
 
-<h2 class="text-center text-white">Vendos te dhenat</h2>
-<p class="warning text-center text-white">Ju lutem sigurohuni qe te dhenat jane te sakta perndryshe programi nuk do te ekzekutohet.</p>
+<h2 class="text-center text-white">Enter data</h2>
+<p class="warning text-center text-white">Please make sure you've correctly entered your data, else the program won't be able to calculate a valid result.</p>
 <br />
 <div class="container" id="mydiv">
     <div class="row">
         <div class="col-md-4 text-center text-white">
-            <p><b>Id e Procesit</b></p>
+            <p><b>Process id</b></p>
         </div>
         <div class="col-md-4 text-center text-white">
-            <p><b>Koha e arritjes se procesit</b></p>
+            <p><b>Arrival Time</b></p>
         </div>
         <div class="col-md-4 text-center text-white">
-            <p><b>Koha e nevojshme per perfundim</b></p>
+            <p><b>Burst Time</b></p>
         </div>
     </div>
     <div class="row">
@@ -139,7 +139,7 @@
         </div>
         <div class="col-md-4 text-center">
             <input type="number" class="form-control" id="process_arr_time_1" />
-            <p class="warning text-white">(Opsionale)</p>
+            <p class="warning text-white">(Optional)</p>
         </div>
         <div class="col-md-4 text-center">
             <input type="number" class="form-control" id="process_burst_time_1" />
@@ -148,7 +148,7 @@
     <br />
     <div class="row">
         <div class="col-md-12 text-center">
-            <input type="button" id="button_1" class="btn green" value="Shto Proces" onclick="AddProcess('process_id_1', 'process_arr_time_1', 'process_burst_time_1', 'button_1')" />
+            <input type="button" id="button_1" class="btn green" value="Add Process" onclick="AddProcess('process_id_1', 'process_arr_time_1', 'process_burst_time_1', 'button_1')" />
         </div>
     </div>
     <br />
@@ -156,7 +156,7 @@
 <br />
 <div class="row text-center">
     <div class="col-md-12 text-center warning text-white">
-        <strong>Vendosni quanten e kohes:</strong>
+        <strong>Enter time quantum:</strong>
     </div>
 </div>
 <br />
@@ -167,7 +167,7 @@
 </div>
 <p class="text-danger text-center" id="errorMessage"></p>
 <div class="text-center">
-    <input type="button" class="btn green" id="proceed" value="Vazhdo" onclick="proceed()" disabled />
+    <input type="button" class="btn green" id="proceed" value="Proceed" onclick="proceed()" disabled />
 </div>
 
 <script type="text/javascript">
@@ -190,8 +190,7 @@
                 $(processArrivalTimeId).attr("disabled", "disabled");
                 $(processBurstTimeId).attr("disabled", "disabled");
                 $(butid).hide();
-                //$("#mydiv").append("<div class=\"row text-center\"><div class=\"col-md-4\"></div><div class=\"col-md-2\"><input type=\"text\" id=\"text_" + i + "\" class=\"form-control\"/></div><div class=\"col-md-2\"><input type=\"button\" id=\"button_" + i + "\" class=\"btn btn-success\" value=\"Shto gjendje\" onclick=\"ShtoGjendje('text_" + i + "','button_" + i + "')\"/></div><div class=\"col-md-4\"></div></div><br/>");
-                $("#mydiv").append("<div class=\"row\"><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_id_" + i + "\"></div><div class=\"col-md-4 text-center\"><input type=\"number\" class=\"form-control\" id=\"process_arr_time_" + i + "\"><p class=\"text-danger\">(Opsionale)</p></div><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_burst_time_" + i + "\"></div></div> <br /><div class=\"row\"><div class=\"col-md-12 text-center\"><input type=\"button\" id=\"button_" + i + "\" class=\"btn green\" value=\"Shto proces\" onclick=\"AddProcess('process_id_" + i + "','process_arr_time_" + i + "','process_burst_time_" + i + "','button_" + i + "')\"/></div></div><br/>");
+                $("#mydiv").append("<div class=\"row\"><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_id_" + i + "\"></div><div class=\"col-md-4 text-center\"><input type=\"number\" class=\"form-control\" id=\"process_arr_time_" + i + "\"><p class=\"text-danger\">(Optional)</p></div><div class=\"col-md-4 text-center\"><input type=\"text\" class=\"form-control\" id=\"process_burst_time_" + i + "\"></div></div> <br /><div class=\"row\"><div class=\"col-md-12 text-center\"><input type=\"button\" id=\"button_" + i + "\" class=\"btn green\" value=\"Add process\" onclick=\"AddProcess('process_id_" + i + "','process_arr_time_" + i + "','process_burst_time_" + i + "','button_" + i + "')\"/></div></div><br/>");
                 i++;
             },
             error: function (error) {
@@ -202,7 +201,7 @@
     function proceed() {
         var timeQuantum = $("#timeQuantum").val();
         if (timeQuantum <= 0) {
-            $("errorMessage").val("Vendosni nje vlere pozitive");
+            $("errorMessage").val("Enter a positive value");
         }
         else {
             $.ajax({
@@ -213,7 +212,7 @@
                     window.location.href = result.Url;
                 },
                 error: function (error) {
-                    $("errorMessage").val("Vendosni nje vlere pozitive");
+                    $("errorMessage").val("Enter a positive value");
                 }
             });
         }

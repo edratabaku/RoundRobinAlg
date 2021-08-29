@@ -11,7 +11,7 @@ namespace RoundRobinAlg.Models
     public class Process
     {
         /// <summary>
-        /// The process id
+        /// The process identifier
         /// </summary>
         public string ProcessId { get; set; }
         /// <summary>

@@ -11,7 +11,7 @@ namespace RoundRobinAlg.Models
     public class ProcessesViewModel
     {
         /// <summary>
-        /// Time when process started execution is CPU
+        /// Time when process started execution in CPU
         /// </summary>
         public int StartTime { get; set; }
         /// <summary>
@@ -19,7 +19,7 @@ namespace RoundRobinAlg.Models
         /// </summary>
         public int EndTime { get; set; }
         /// <summary>
-        /// Id of process
+        /// Identifier of the process
         /// </summary>
         public string ProcessId { get; set; }
     }
